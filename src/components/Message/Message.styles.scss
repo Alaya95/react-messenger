@@ -1,0 +1,28 @@
+$bgFrom: #E7E7E7;
+$colorTextFrom: #303030;
+$bgTo: #6E00FF;
+$colorTextTo: #ffffff;
+
+.message {
+    width: fit-content;
+    max-width:90%;
+    height: fit-content;
+    margin: 20px;
+    padding: 2px 10px;
+    font-size: 16px;
+    text-align: left;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 3px 3px 5px gray;
+
+    &-from {
+        background-color: $bgFrom;
+        color: $colorTextFrom;
+    }
+
+    &-to {
+        background-color: $bgTo;
+        color: $colorTextTo;
+    }
+}

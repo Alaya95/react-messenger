@@ -1,23 +1,13 @@
-import logo from './logo.svg';
-import './App.css';
+import Message from './components/Message/Message';
+
+const text = 'Текст, что был получен из пропса';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Message text={'Здесь текст'} />
+      <Message text={'text'} />
+      <Message text={text} messageTo={true} />
     </div>
   );
 }
