@@ -1,13 +1,27 @@
 import Message from './components/Message/Message';
-
-const text = 'Текст, что был получен из пропса';
+import Form from './components/Form/Form';
+import { useState, useEffect } from 'react';
 
 function App() {
+  const [messages, setMessages] = useState([]);
+
+  const addMessage = (message) => {
+    setMessages([...messages, message]);
+  };
+
+  useEffect(() => {
+    if (messages.length && messages[messages.length - 1]['author'] === 'name') {
+      addMessage({ author: 'robot', text: 'fdsfsd' });
+    }
+  }, [messages]);
+
   return (
     <div className="App">
-      <Message text={'Здесь текст'} />
-      <Message text={'text'} />
-      <Message text={text} messageTo={true} />
+      {messages.map((msg, index) => (
+        <Message key={'message' + index} author={msg.author} text={msg.text} />
+      ))}
+
+      <Form onSubmit={addMessage} />
     </div>
   );
 }
