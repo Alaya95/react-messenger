@@ -1,6 +1,7 @@
-import Message from './components/Message/Message';
 import Form from './components/Form/Form';
 import { useState, useEffect } from 'react';
+import { AUTHORS } from './components/utils/constants';
+import { MessageList } from './components/MessageList/MessageList';
 
 function App() {
   const [messages, setMessages] = useState([]);
@@ -9,19 +10,29 @@ function App() {
     setMessages([...messages, message]);
   };
 
+  const sendMessages = (text) => {
+    addMessage({
+      author: AUTHORS.human,
+      text,
+    });
+  };
+
   useEffect(() => {
-    if (messages.length && messages[messages.length - 1]['author'] === 'name') {
-      addMessage({ author: 'robot', text: 'fdsfsd' });
+    let timeout;
+    if (messages[messages.length - 1]?.author === AUTHORS.human) {
+      timeout = setTimeout(() => {
+        addMessage({ author: AUTHORS.robot, text: 'fdsfsd' });
+      }, 1000);
     }
+    return () => {
+      clearTimeout(timeout);
+    };
   }, [messages]);
 
   return (
     <div className="App">
-      {messages.map((msg, index) => (
-        <Message key={'message' + index} author={msg.author} text={msg.text} />
-      ))}
-
-      <Form onSubmit={addMessage} />
+      <MessageList messages={messages} />
+      <Form onSubmit={sendMessages} />
     </div>
   );
 }

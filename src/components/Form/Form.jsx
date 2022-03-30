@@ -1,14 +1,10 @@
 import { useState } from 'react';
 export default function Form({ onSubmit }) {
-
     const [value, setValue] = useState('');
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        onSubmit({
-            author: 'name',
-            text: value
-        });
+        onSubmit(value);
         setValue('')
     }
 
