@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { AUTHORS } from './components/utils/constants';
 import { MessageList } from './components/MessageList/MessageList';
 import './App.css';
-import { Container } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 const chats = [
   { id: 1, name: 'aria', family: 'Inca' },
@@ -40,11 +40,15 @@ function App() {
 
   return (
     <div className="App">
-      <Container maxWidth="sm">
-        <ChatsList chats={chats} />
-        <MessageList messages={messages} />
-        <Form onSubmit={sendMessages} />
-      </Container>
+      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+        <Grid item xs={2} sm={4} md={4}>
+          <ChatsList chats={chats} />
+        </Grid>
+        <Grid item xs={2} sm={8} md={4}>
+          <MessageList messages={messages} />
+          <Form onSubmit={sendMessages} />
+        </Grid>
+      </Grid>
     </div>
   );
 }
