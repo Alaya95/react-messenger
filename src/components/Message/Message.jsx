@@ -1,5 +1,6 @@
 import React from 'react';
 import "./Message.styles.scss"
+import PropTypes from 'prop-types';
 
 export default function Message({ author, text }) {
     return (
@@ -8,4 +9,9 @@ export default function Message({ author, text }) {
             <p>{text}</p>
         </div>
     );
+}
+
+Message.propTypes = {
+    author: PropTypes.string.isRequired,
+    text: PropTypes.string,
 }
