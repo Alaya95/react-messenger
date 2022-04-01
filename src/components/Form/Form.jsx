@@ -1,6 +1,12 @@
-import { useState } from 'react';
+import { Button, TextField } from '@mui/material';
+import { useState, useRef, useEffect } from 'react';
+
+import './Form.styles.scss';
+
 export default function Form({ onSubmit }) {
     const [value, setValue] = useState('');
+
+    const inpuFocusRef = useRef();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -12,10 +18,20 @@ export default function Form({ onSubmit }) {
         setValue(e.target.value)
     }
 
+    useEffect(() => {
+        inpuFocusRef.current?.focus();
+    });
+
     return (
-        <form onSubmit={handleSubmit} className="form">
-            <input value={value} onChange={handleChange} type="text" />
-            <input type="submit" />
+        <form onSubmit={handleSubmit}>
+            <TextField
+                id="demo-helper-text-misaligned"
+                label="Введите сообщение"
+                value={value}
+                onChange={handleChange}
+                inputRef={inpuFocusRef}
+            />
+            <Button variant='outlined'type="submit">Submit</Button>
         </form>
     )
 }

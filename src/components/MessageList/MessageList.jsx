@@ -1,9 +1,14 @@
 import Message from '../Message/Message'
+import PropTypes from 'prop-types';
 
 export const MessageList = ({ messages }) => {
     return (
         messages.map((msg, index) => (
-            <Message key={'message' + index} author={msg.author} text={msg.text} />
+            <Message key={msg.id} author={msg.author} text={msg.text} />
         ))
     )
+}
+
+MessageList.propTypes = {
+    messages: PropTypes.array
 }
