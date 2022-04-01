@@ -40,7 +40,7 @@ function App() {
 
   return (
     <div className="App">
-      <Box
+      <Box 
         sx={{
           height: '100%',
           display: 'grid',
@@ -50,6 +50,7 @@ function App() {
         <Box
           sx={{
             gridColumn: '1 / 2',
+            boxShadow: '-10px 0px 24px grey',
           }}>
           <ChatsList chats={chats} />
         </Box>
