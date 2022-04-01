@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { AUTHORS } from './components/utils/constants';
 import { MessageList } from './components/MessageList/MessageList';
 import './App.css';
-import { Container, Grid } from '@mui/material';
+import { Box } from '@mui/material';
 
 const chats = [
   { id: 1, name: 'aria', family: 'Inca' },
@@ -40,15 +40,54 @@ function App() {
 
   return (
     <div className="App">
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid item xs={2} sm={4} md={4}>
+      <Box
+        sx={{
+          height: '100%',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: 1,
+        }}>
+        <Box
+          sx={{
+            gridColumn: '1 / 2',
+          }}>
           <ChatsList chats={chats} />
-        </Grid>
-        <Grid item xs={2} sm={8} md={4}>
-          <MessageList messages={messages} />
-          <Form onSubmit={sendMessages} />
-        </Grid>
-      </Grid>
+        </Box>
+
+        <Box
+          sx={{
+            height: '100%',
+            gridColumn: '2 / 5',
+            display: 'grid',
+            gridRow: '1',
+          }}>
+          <Box
+            sx={{
+              height: '5vh',
+              gridRow: '1 / 1',
+              gap: '1',
+            }}>
+            Название чата
+          </Box>
+          <Box
+            sx={{
+              height: '85vh',
+              gridRow: '2 / 4',
+              overflow: ' scroll',
+              overflowX: 'hidden',
+              overflowY: 'auto',
+            }}>
+            <MessageList messages={messages} />
+          </Box>
+          <Box
+            sx={{
+              gridRow: '4 / 4',
+              gap: 1,
+            }}>
+            <Form onSubmit={sendMessages} />
+          </Box>
+        </Box>
+      </Box>
     </div>
   );
 }
