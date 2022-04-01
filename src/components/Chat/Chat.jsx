@@ -1,4 +1,5 @@
 import { ListItem, ListItemAvatar, Avatar, ListItemText } from "@mui/material";
+import PropTypes from 'prop-types';
 
 export const Chat = ({ username, family }) => {
     function stringToColor(string) {
@@ -31,9 +32,14 @@ export const Chat = ({ username, family }) => {
     return (
         <ListItem>
             <ListItemAvatar>
-                <Avatar {...stringAvatar(`${username} ${family} `)} />
+                <Avatar {...stringAvatar(`${username} ${family}`)} />
             </ListItemAvatar>
             <ListItemText primary={username + " " + family} />
         </ListItem>
     );
+}
+
+Chat.propTypes = {
+    username: PropTypes.string,
+    family: PropTypes.string
 }

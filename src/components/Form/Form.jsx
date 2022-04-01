@@ -1,5 +1,6 @@
 import { Button, TextField } from '@mui/material';
 import { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import './Form.styles.scss';
 
@@ -31,7 +32,11 @@ export default function Form({ onSubmit }) {
                 onChange={handleChange}
                 inputRef={inpuFocusRef}
             />
-            <Button variant='outlined'type="submit">Submit</Button>
+            <Button variant='outlined' type="submit">Submit</Button>
         </form>
     )
+}
+
+Form.propTypes = {
+    onSubmit: PropTypes.func
 }
