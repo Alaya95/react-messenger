@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default function Message({ author, text }) {
     return (
-        <div className={"message messageTo"}>
+        <div className={"message " + (author !== 'Robot' ? "message-to" : 'message-from')}>
             <span>{author}:</span>
             <p>{text}</p>
         </div>

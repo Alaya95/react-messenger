@@ -1,5 +1,7 @@
 import { Button, TextField } from '@mui/material';
 import { useState, useRef, useEffect } from 'react';
+import PropTypes from 'prop-types';
+import SendIcon from '@mui/icons-material/Send';
 
 import './Form.styles.scss';
 
@@ -31,7 +33,11 @@ export default function Form({ onSubmit }) {
                 onChange={handleChange}
                 inputRef={inpuFocusRef}
             />
-            <Button variant='outlined'type="submit">Submit</Button>
+            <Button sx={{ margin: '10px' }} variant='contained' endIcon={<SendIcon />} type="submit">Send</Button>
         </form>
     )
+}
+
+Form.propTypes = {
+    onSubmit: PropTypes.func
 }

@@ -4,7 +4,7 @@ import { Chat } from '../Chat/Chat';
 export const ChatsList = ({ chats }) => {
 
     return (
-        <List xs={3} variant="outlined">
+        <List>
             {chats.map((chat) => (
                 <Chat
                     key={chat.id}
