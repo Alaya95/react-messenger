@@ -4,12 +4,21 @@ import { ChatsList } from '../../components/ChatsList/ChatsList';
 import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
 import { AUTHORS, CHATLIST } from '../../components/utils/constants'
+import { Navigate, useParams } from 'react-router-dom';
+
+const initMessages = {
+    chat1: [],
+    chat2: [],
+    chat3: [],
+    chat4: [],
+}
 
 export function Chat() {
-    const [messages, setMessages] = useState([]);
+    const { id } = useParams();
     const timeout = useRef();
+    const [messages, setMessages] = useState(initMessages);
     const addMessage = (message) => {
-        setMessages([...messages, message]);
+        setMessages({ ...messages, [id]: [...messages[id], message] });
     };
     const sendMessages = (text) => {
         addMessage({
@@ -20,7 +29,8 @@ export function Chat() {
     };
 
     useEffect(() => {
-        if (messages[messages.length - 1]?.author === AUTHORS.human) {
+        const lastMessage = messages[id]?.[messages[id]?.length - 1];
+        if (lastMessage?.author === AUTHORS.human) {
             timeout.current = setTimeout(() => {
                 addMessage({ author: AUTHORS.robot, text: 'fdsfsd', id: Date.now() });
             }, 1000);
@@ -30,64 +40,45 @@ export function Chat() {
         };
     }, [messages]);
 
+    if (!messages[id]) {
+        return <Navigate to='/chat' replace />
+    }
+
     return (
-        <div className="App">
-            <Box sx={{height: '10%' }} >
-                главная
-                чат
-                профиль
-            </Box>
-
-
+        <>
             <Box
                 sx={{
-                    height: '90%',
+                    height: '100%',
+                    gridColumn: '2 / 5',
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(4, 1fr)',
-                    gap: 1,
+                    gridRow: '1',
                 }}>
                 <Box
                     sx={{
-                        gridColumn: '1 / 2',
-                        boxShadow: '-10px 0px 24px grey',
+                        height: '5vh',
+                        gridRow: '1 / 1',
+                        gap: '1',
                     }}>
-                    <ChatsList chats={CHATLIST} />
+                    Название чата
                 </Box>
-
                 <Box
                     sx={{
-                        height: '100%',
-                        gridColumn: '2 / 5',
-                        display: 'grid',
-                        gridRow: '1',
+                        height: '75vh',
+                        gridRow: '2 / 4',
+                        overflow: ' scroll',
+                        overflowX: 'hidden',
+                        overflowY: 'auto',
                     }}>
-                    <Box
-                        sx={{
-                            height: '5vh',
-                            gridRow: '1 / 1',
-                            gap: '1',
-                        }}>
-                        Название чата
-                    </Box>
-                    <Box
-                        sx={{
-                            height: '75vh',
-                            gridRow: '2 / 4',
-                            overflow: ' scroll',
-                            overflowX: 'hidden',
-                            overflowY: 'auto',
-                        }}>
-                        <MessageList messages={messages} />
-                    </Box>
-                    <Box
-                        sx={{
-                            gridRow: '4 / 4',
-                            gap: 1,
-                        }}>
-                        <Form onSubmit={sendMessages} />
-                    </Box>
+                    <MessageList messages={messages[id]} />
+                </Box>
+                <Box
+                    sx={{
+                        gridRow: '4 / 4',
+                        gap: 1,
+                    }}>
+                    <Form onSubmit={sendMessages} />
                 </Box>
             </Box>
-        </div>
+        </>
     );
 }
