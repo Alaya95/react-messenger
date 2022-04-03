@@ -6,7 +6,7 @@ export default function Message({ author, text }) {
     return (
         <div className={"message " + (author !== 'Robot' ? "message-to" : 'message-from')}>
             <span>{author}:</span>
-            <p>{text}</p>
+            <p className='message-text'>{text}</p>
         </div>
     );
 }
