@@ -16,6 +16,10 @@ $colorTextTo: #ffffff;
     border-radius: 5px;
     box-shadow: 3px 3px 5px gray;
 
+    &-text {
+        word-break: break-word;
+    }
+
     &-from {
         background-color: $bgFrom;
         color: $colorTextFrom;

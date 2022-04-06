@@ -1,94 +1,33 @@
-import Form from './components/Form/Form';
+import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
+import './App.scss';
 import { ChatsList } from './components/ChatsList/ChatsList';
-import { useState, useRef, useEffect } from 'react';
-import { AUTHORS } from './components/utils/constants';
-import { MessageList } from './components/MessageList/MessageList';
-import './App.css';
-import { Box } from '@mui/material';
-
-const chats = [
-  { id: 1, name: 'aria', family: 'Inca' },
-  { id: 2, name: 'eli', family: 'Ban' },
-  { id: 3, name: 'Anna', family: 'Smith' },
-  { id: 4, name: 'Alex', family: 'Bran' },
-];
+import { Chat } from './screens/Chat/Chat';
+import { Profile } from './screens/Profile/Profile';
+import { Home } from './screens/Home/Home';
 
 function App() {
-  const [messages, setMessages] = useState([]);
-  const timeout = useRef();
-  const addMessage = (message) => {
-    setMessages([...messages, message]);
-  };
-  const sendMessages = (text) => {
-    addMessage({
-      id: Date.now(),
-      author: AUTHORS.human,
-      text,
-    });
-  };
-
-  useEffect(() => {
-    if (messages[messages.length - 1]?.author === AUTHORS.human) {
-      timeout.current = setTimeout(() => {
-        addMessage({ author: AUTHORS.robot, text: 'fdsfsd', id: Date.now() });
-      }, 1000);
-    }
-    return () => {
-      clearTimeout(timeout.current);
-    };
-  }, [messages]);
-
   return (
     <div className="App">
-      <Box 
-        sx={{
-          height: '100%',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: 1,
-        }}>
-        <Box
-          sx={{
-            gridColumn: '1 / 2',
-            boxShadow: '-10px 0px 24px grey',
-          }}>
-          <ChatsList chats={chats} />
-        </Box>
+      <BrowserRouter>
+        <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
+          Home page
+        </NavLink>
+        <NavLink to="/chat" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
+          Chat all
+        </NavLink>
+        <NavLink to="/profile" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
+          Profile
+        </NavLink>
 
-        <Box
-          sx={{
-            height: '100%',
-            gridColumn: '2 / 5',
-            display: 'grid',
-            gridRow: '1',
-          }}>
-          <Box
-            sx={{
-              height: '5vh',
-              gridRow: '1 / 1',
-              gap: '1',
-            }}>
-            Название чата
-          </Box>
-          <Box
-            sx={{
-              height: '85vh',
-              gridRow: '2 / 4',
-              overflow: ' scroll',
-              overflowX: 'hidden',
-              overflowY: 'auto',
-            }}>
-            <MessageList messages={messages} />
-          </Box>
-          <Box
-            sx={{
-              gridRow: '4 / 4',
-              gap: 1,
-            }}>
-            <Form onSubmit={sendMessages} />
-          </Box>
-        </Box>
-      </Box>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/chat" element={<ChatsList />}>
+            <Route path=":id" element={<Chat />} />
+          </Route>
+          <Route path="/profile" element={<Profile />}></Route>
+          <Route path="*" element={<h4>404</h4>}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
