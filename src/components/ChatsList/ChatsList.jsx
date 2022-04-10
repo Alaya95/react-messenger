@@ -3,16 +3,17 @@ import { Box, List } from '@mui/material';
 import { Chat } from '../Chat/Chat';
 import { NavLink, Outlet } from 'react-router-dom';
 import './ChatList.styles.css';
+import Form from '../Form/Form';
 
-const chats = [
-    { id: 'chat1', name: 'aria', family: 'Inca' },
-    { id: 'chat2', name: 'eli', family: 'Ban' },
-    { id: 'chat3', name: 'Anna', family: 'Smith' },
-    { id: 'chat4', name: 'Alex', family: 'Bran' },
-];
-
-export const ChatsList = () => {
-
+export const ChatsList = ({ chats, addChat, deleteChat }) => {
+    const handleSubmit = (newChatName) => {
+        const newChat = {
+            id: `chat-${Date.now()}`,
+            name: newChatName,
+            family: newChatName
+        };
+        addChat(newChat)
+    };
     return (
         <Box
             sx={{
@@ -22,14 +23,20 @@ export const ChatsList = () => {
                 gap: 1,
             }}>
             <List sx={{ gridColumn: '1 / 2', boxShadow: '-10px 0px 24px grey', }}>
+                <Form onSubmit={handleSubmit} />
                 {chats.map((chat) => (
-                    <NavLink className='chatlist-link' to={`/chat/${chat.id}`} key={chat.id}>
-                        <Chat
-                            key={chat.id}
-                            username={chat.name}
-                            family={chat.family}
-                        />
-                    </NavLink>
+                    <div key={chat.id}>
+                        <NavLink className='chatlist-link' to={`/chat/${chat.id}`} >
+                            <Chat
+                                key={chat.id}
+                                username={chat.name}
+                                family={chat.family}
+                            />
+                        </NavLink>
+                        <button className='chatlist-button' onClick={() => deleteChat(chat.id)} >
+                            delete
+                        </button>
+                    </div>
                 ))}
             </List >
             <Outlet />
