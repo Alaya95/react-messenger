@@ -1,38 +1,28 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 import { Box } from '@mui/material';
-import { ChatsList } from '../../components/ChatsList/ChatsList';
 import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
-import { AUTHORS, CHATLIST } from '../../components/utils/constants'
+import { AUTHORS } from '../../components/utils/constants'
 import { Navigate, useParams } from 'react-router-dom';
 
-const initMessages = {
-    chat1: [],
-    chat2: [],
-    chat3: [],
-    chat4: [],
-}
-
-export function Chat() {
+export function Chat({ messages, addMessage }) {
     const { id } = useParams();
     const timeout = useRef();
-    const [messages, setMessages] = useState(initMessages);
-    const addMessage = (message) => {
-        setMessages({ ...messages, [id]: [...messages[id], message] });
-    };
     const sendMessages = (text) => {
         addMessage({
             id: Date.now(),
             author: AUTHORS.human,
             text,
-        });
+        }, id);
     };
 
     useEffect(() => {
         const lastMessage = messages[id]?.[messages[id]?.length - 1];
         if (lastMessage?.author === AUTHORS.human) {
             timeout.current = setTimeout(() => {
-                addMessage({ author: AUTHORS.robot, text: 'fdsfsd', id: Date.now() });
+                addMessage({ 
+                    author: AUTHORS.robot, text: 'fdsfsd', id: Date.now() 
+                }, id);
             }, 1000);
         }
         return () => {
@@ -59,7 +49,7 @@ export function Chat() {
                         gridRow: '1 / 1',
                         gap: '1',
                     }}>
-                    Название чата
+                    название чата
                 </Box>
                 <Box
                     sx={{
