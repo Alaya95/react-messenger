@@ -10,7 +10,7 @@ export function Chat({ messages, addMessage }) {
     const timeout = useRef();
     const sendMessages = (text) => {
         addMessage({
-            id: Date.now(),
+            id: 'message-' + Date.now(),
             author: AUTHORS.human,
             text,
         }, id);
@@ -20,8 +20,8 @@ export function Chat({ messages, addMessage }) {
         const lastMessage = messages[id]?.[messages[id]?.length - 1];
         if (lastMessage?.author === AUTHORS.human) {
             timeout.current = setTimeout(() => {
-                addMessage({ 
-                    author: AUTHORS.robot, text: 'fdsfsd', id: Date.now() 
+                addMessage({
+                    author: AUTHORS.robot, text: 'fdsfsd', id: Date.now()
                 }, id);
             }, 1000);
         }
