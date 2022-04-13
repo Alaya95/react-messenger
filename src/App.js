@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import './App.scss';
 import { ChatsList } from './components/ChatsList/ChatsList';
 import { Chat } from './screens/Chat/Chat';
@@ -7,11 +7,15 @@ import { Profile } from './screens/Profile/Profile';
 import { Home } from './screens/Home/Home';
 import { addChat, deleteChat } from './store/chats/actions';
 import { addMessage, addMessageChat, deleteMessage } from './store/messages/actions';
+import { selectorChats } from './store/chats/selectors';
+import { selectorMessages } from './store/messages/selectors';
+
+
 
 function App() {
   const dispatch = useDispatch();
-  const chats = useSelector((state) => state.chats);
-  const messages = useSelector((state) => state.messages);
+  const messages = useSelector(selectorMessages, shallowEqual);
+  const chats = useSelector(selectorChats, shallowEqual)
 
   const addNewChat = (newChat) => {
     dispatch(addChat(newChat));
