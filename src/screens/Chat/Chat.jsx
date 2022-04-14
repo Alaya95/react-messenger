@@ -4,25 +4,34 @@ import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
 import { AUTHORS } from '../../components/utils/constants'
 import { Navigate, useParams } from 'react-router-dom';
+import { selectorMessages } from '../../store/messages/selectors';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { addMessage } from '../../store/messages/actions';
 
-export function Chat({ messages, addMessage }) {
+export function Chat() {
     const { id } = useParams();
+    const messages = useSelector(selectorMessages, shallowEqual);
+    const dispatch = useDispatch();
     const timeout = useRef();
     const sendMessages = (text) => {
-        addMessage({
+        dispatch(addMessage(id, {
             id: 'message-' + Date.now(),
             author: AUTHORS.human,
-            text,
-        }, id);
+            text
+        }));
     };
 
     useEffect(() => {
         const lastMessage = messages[id]?.[messages[id]?.length - 1];
         if (lastMessage?.author === AUTHORS.human) {
             timeout.current = setTimeout(() => {
-                addMessage({
-                    author: AUTHORS.robot, text: 'fdsfsd', id: Date.now()
-                }, id);
+                dispatch(
+                    addMessage(id, {
+                        author: AUTHORS.robot,
+                        text: 'fdsfsd',
+                        id: Date.now()
+                    })
+                );
             }, 1000);
         }
         return () => {
