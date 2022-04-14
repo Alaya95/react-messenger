@@ -10,8 +10,6 @@ import { addMessage, addMessageChat, deleteMessage } from './store/messages/acti
 import { selectorChats } from './store/chats/selectors';
 import { selectorMessages } from './store/messages/selectors';
 
-
-
 function App() {
   const dispatch = useDispatch();
   const messages = useSelector(selectorMessages, shallowEqual);
@@ -19,10 +17,10 @@ function App() {
 
   const addNewChat = (newChat) => {
     dispatch(addChat(newChat));
-    dispatch(addMessageChat({ [newChat.id]: [] }));
+    dispatch(addMessageChat(newChat.id));
   };
-  const addNewMessage = (message, id) => {
-    dispatch(addMessage({ id, message }));
+  const addNewMessage = (message, chatId) => {
+    dispatch(addMessage( chatId, message ));
   };
   const removeChat = (id) => {
     dispatch(deleteChat(id));
