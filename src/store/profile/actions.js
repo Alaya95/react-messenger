@@ -1,9 +1,9 @@
-export const TOGGLE_CHECKBOX = 'PROFILE::TOGGLE_CHECKBOX'; 
-// PROFILE::TOGGLE_CHECKBOX ЗАПИСЬ ТАКОГО ВИДА ИСПОЛЬЗУЕТСЯ ДЛЯ БОЛЕЕ ПРОСТОГО ОПРЕДЕЛЕНИЯ К ЧЕМУ ОТНОСИТСЯ TOGGLT_CHECKBOX
-
-
-// тип нужен для уникальной индентификации action 
+export const TOGGLE_CHECKBOX = 'PROFILE::TOGGLE_CHECKBOX';
+export const SET_NAME = 'PROFILE::SET_NAME';
 export const toggleCheckbox = {
-    type: TOGGLE_CHECKBOX
-}
-
+  type: TOGGLE_CHECKBOX,
+};
+export const setName = (name) => ({
+    type: SET_NAME,
+    payload: name
+});
