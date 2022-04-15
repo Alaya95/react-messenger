@@ -13,6 +13,7 @@ import Form from '../../components/Form/Form';
 
 export function Chat() {
     const { id } = useParams();
+
     const getMessages = useMemo(() => selectMessagesChatId(id), [id]);
     const messages = useSelector(getMessages);
     const dispatch = useDispatch();
