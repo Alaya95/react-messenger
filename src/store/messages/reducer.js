@@ -1,6 +1,6 @@
 import { ADD_MESSAGE, ADD_MESSAGE_CHAT, DELETE_MESSAGE } from './actions';
 
-const initialState = [];
+const initialState = {};
 
 export const messagesReducer = (state = initialState, { type, payload }) => {
   switch (type) {

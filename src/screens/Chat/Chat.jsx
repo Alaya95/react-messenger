@@ -1,16 +1,18 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import { Box } from '@mui/material';
 import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
 import { AUTHORS } from '../../components/utils/constants'
 import { Navigate, useParams } from 'react-router-dom';
-import { selectorMessages } from '../../store/messages/selectors';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+
+import { useDispatch, useSelector } from 'react-redux';
 import { addMessage } from '../../store/messages/actions';
+import { selectMessagesChatId } from '../../store/chats/selectors';
 
 export function Chat() {
     const { id } = useParams();
-    const messages = useSelector(selectorMessages, shallowEqual);
+    const getMessages = useMemo(() => selectMessagesChatId(id), [id]);
+    const messages = useSelector(getMessages);
     const dispatch = useDispatch();
     const timeout = useRef();
     const sendMessages = (text) => {
@@ -22,7 +24,7 @@ export function Chat() {
     };
 
     useEffect(() => {
-        const lastMessage = messages[id]?.[messages[id]?.length - 1];
+        const lastMessage = messages?.[messages?.length - 1];
         if (lastMessage?.author === AUTHORS.human) {
             timeout.current = setTimeout(() => {
                 dispatch(
@@ -39,7 +41,7 @@ export function Chat() {
         };
     }, [messages]);
 
-    if (!messages[id]) {
+    if (!messages) {
         return <Navigate to='/chat' replace />
     }
 
@@ -68,7 +70,7 @@ export function Chat() {
                         overflowX: 'hidden',
                         overflowY: 'auto',
                     }}>
-                    <MessageList messages={messages[id]} />
+                    <MessageList messages={messages} />
                 </Box>
                 <Box
                     sx={{
