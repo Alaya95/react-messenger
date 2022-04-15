@@ -1,45 +1,28 @@
-import { useRef, useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMessageWithReply } from '../../store/messages/actions';
+import { selectMessagesChatId } from '../../store/chats/selectors';
+
 import { Box } from '@mui/material';
+
+import { AUTHORS } from '../../components/utils/constants'
+
 import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
-import { AUTHORS } from '../../components/utils/constants'
-import { Navigate, useParams } from 'react-router-dom';
-
-import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '../../store/messages/actions';
-import { selectMessagesChatId } from '../../store/chats/selectors';
 
 export function Chat() {
     const { id } = useParams();
     const getMessages = useMemo(() => selectMessagesChatId(id), [id]);
     const messages = useSelector(getMessages);
     const dispatch = useDispatch();
-    const timeout = useRef();
     const sendMessages = (text) => {
-        dispatch(addMessage(id, {
+        dispatch(addMessageWithReply(id, {
             id: 'message-' + Date.now(),
             author: AUTHORS.human,
             text
         }));
     };
-
-    useEffect(() => {
-        const lastMessage = messages?.[messages?.length - 1];
-        if (lastMessage?.author === AUTHORS.human) {
-            timeout.current = setTimeout(() => {
-                dispatch(
-                    addMessage(id, {
-                        author: AUTHORS.robot,
-                        text: 'fdsfsd',
-                        id: Date.now()
-                    })
-                );
-            }, 1000);
-        }
-        return () => {
-            clearTimeout(timeout.current);
-        };
-    }, [messages]);
 
     if (!messages) {
         return <Navigate to='/chat' replace />
