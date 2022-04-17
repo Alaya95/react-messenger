@@ -1,5 +1,7 @@
+import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Form from "../../components/Form/Form";
+import { usePrev } from "../../components/utils/usePrev";
 import { setName, toggleCheckbox } from "../../store/profile/actions";
 import { selectName, selectShowName } from "../../store/profile/selectors";
 
@@ -37,13 +39,16 @@ import { selectName, selectShowName } from "../../store/profile/selectors";
 
 //версия с селектором
 export const Profile = () => {
+    const dispatch = useDispatch();
     const name = useSelector(selectName);
     const showName = useSelector(selectShowName);
-    const dispatch = useDispatch();
 
     const handleClick = () => { dispatch(toggleCheckbox) };
     const handleSubmit = (text) => { dispatch(setName(text)) };
 
+    const prevName = usePrev(name);
+    console.log(prevName);
+    
     return (
         <>
             <div>Profile</div>
@@ -52,5 +57,6 @@ export const Profile = () => {
                 {showName && <p>{name}</p>}
             </div>
             <Form onSubmit={handleSubmit} />
-        </>    );
+        </>
+    );
 }
