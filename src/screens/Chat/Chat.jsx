@@ -1,36 +1,31 @@
-import { useRef, useEffect } from 'react';
+import { useMemo } from 'react';
+import { Navigate, useParams } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { addMessageWithReply } from '../../store/messages/actions';
+import { selectMessagesChatId } from '../../store/chats/selectors';
+
 import { Box } from '@mui/material';
+
+import { AUTHORS } from '../../components/utils/constants'
+
 import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
-import { AUTHORS } from '../../components/utils/constants'
-import { Navigate, useParams } from 'react-router-dom';
 
-export function Chat({ messages, addMessage }) {
+export function Chat() {
     const { id } = useParams();
-    const timeout = useRef();
+
+    const getMessages = useMemo(() => selectMessagesChatId(id), [id]);
+    const messages = useSelector(getMessages);
+    const dispatch = useDispatch();
     const sendMessages = (text) => {
-        addMessage({
+        dispatch(addMessageWithReply(id, {
             id: 'message-' + Date.now(),
             author: AUTHORS.human,
-            text,
-        }, id);
+            text
+        }));
     };
 
-    useEffect(() => {
-        const lastMessage = messages[id]?.[messages[id]?.length - 1];
-        if (lastMessage?.author === AUTHORS.human) {
-            timeout.current = setTimeout(() => {
-                addMessage({
-                    author: AUTHORS.robot, text: 'fdsfsd', id: Date.now()
-                }, id);
-            }, 1000);
-        }
-        return () => {
-            clearTimeout(timeout.current);
-        };
-    }, [messages]);
-
-    if (!messages[id]) {
+    if (!messages) {
         return <Navigate to='/chat' replace />
     }
 
@@ -59,7 +54,7 @@ export function Chat({ messages, addMessage }) {
                         overflowX: 'hidden',
                         overflowY: 'auto',
                     }}>
-                    <MessageList messages={messages[id]} />
+                    <MessageList messages={messages} />
                 </Box>
                 <Box
                     sx={{
