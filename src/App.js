@@ -4,6 +4,7 @@ import { ChatsList } from './components/ChatsList/ChatsList';
 import { Chat } from './screens/Chat/Chat';
 import { Profile } from './screens/Profile/Profile';
 import { Home } from './screens/Home/Home';
+import { Articles } from './screens/Articles/Articles';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
           Home page
         </NavLink>
+        <NavLink to="/articles">Articles</NavLink>
         <NavLink to="/chat" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
           Chat all
         </NavLink>
@@ -21,6 +23,7 @@ function App() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/articles" element={<Articles />} />
           <Route path="/chat" element={<ChatsList />}>
             <Route path=":id" element={<Chat />} />
           </Route>
