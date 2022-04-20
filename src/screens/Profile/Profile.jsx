@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+// import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Form from "../../components/Form/Form";
 import { usePrev } from "../../components/utils/usePrev";
@@ -38,7 +38,7 @@ import { selectName, selectShowName } from "../../store/profile/selectors";
 // export const Profile = connect(mapStateToProps, mapDispatch)(ProfileToConnect);
 
 //версия с селектором
-export const Profile = () => {
+export const Profile = ({ onLogout }) => {
     const dispatch = useDispatch();
     const name = useSelector(selectName);
     const showName = useSelector(selectShowName);
@@ -47,11 +47,11 @@ export const Profile = () => {
     const handleSubmit = (text) => { dispatch(setName(text)) };
 
     const prevName = usePrev(name);
-    console.log(prevName);
-    
+
     return (
         <>
             <div>Profile</div>
+            <button onClick={onLogout}>Logout</button>
             <div>
                 <button onClick={handleClick} > {showName ? 'off' : 'on'}</button>
                 {showName && <p>{name}</p>}

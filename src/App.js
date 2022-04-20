@@ -5,8 +5,20 @@ import { Chat } from './screens/Chat/Chat';
 import { Profile } from './screens/Profile/Profile';
 import { Home } from './screens/Home/Home';
 import { Articles } from './screens/Articles/Articles';
+import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
+import { useState } from 'react';
+import { PublicRoute } from './components/PublicRoute/PublicRoute';
+
 
 function App() {
+  const [authed, setAuthed] = useState(false);
+  const handleLogin = () => {
+    setAuthed(true);
+  };
+  const handleLogout = () => {
+    setAuthed(false);
+  };
+
   return (
     <div className="App">
       <BrowserRouter>
@@ -22,12 +34,22 @@ function App() {
         </NavLink>
 
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/articles" element={<Articles />} />
-          <Route path="/chat" element={<ChatsList />}>
-            <Route path=":id" element={<Chat />} />
+          <Route path="/" element={<PublicRoute authed={authed} />}>
+            <Route path="" element={<Home onAuth={handleLogin} />} />
           </Route>
-          <Route path="/profile" element={<Profile />}></Route>
+
+          <Route path="/articles" element={<Articles />} />
+
+          <Route path="/profile" element={<PrivateRoute authed={authed} />}>
+            <Route path="" element={<Profile onLogout={handleLogout} />} />
+          </Route>
+
+          <Route path="/chat" element={<PrivateRoute authed={authed} />}>
+            <Route path="" element={<ChatsList />}>
+              <Route path=":id" element={<Chat />} />
+            </Route>
+          </Route>
+
           <Route path="*" element={<h4>404</h4>}></Route>
         </Routes>
       </BrowserRouter>

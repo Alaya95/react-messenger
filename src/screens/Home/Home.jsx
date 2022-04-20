@@ -1,3 +1,8 @@
-export const Home = () => {
-    return (<div>Profile</div>)
+export const Home = ({ onAuth }) => {
+    return (
+        <>
+            <div>Home page</div>
+            <button onClick={onAuth}>Auth</button>
+        </>
+    )
 }
