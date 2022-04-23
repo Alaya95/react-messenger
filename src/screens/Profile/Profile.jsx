@@ -2,6 +2,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import Form from "../../components/Form/Form";
 import { usePrev } from "../../components/utils/usePrev";
+import { logOut } from "../../services/firebase";
 import { setName, toggleCheckbox } from "../../store/profile/actions";
 import { selectName, selectShowName } from "../../store/profile/selectors";
 
@@ -46,12 +47,10 @@ export const Profile = ({ onLogout }) => {
     const handleClick = () => { dispatch(toggleCheckbox) };
     const handleSubmit = (text) => { dispatch(setName(text)) };
 
-    const prevName = usePrev(name);
-
     return (
         <>
             <div>Profile</div>
-            <button onClick={onLogout}>Logout</button>
+            <button onClick={logOut}>Logout</button>
             <div>
                 <button onClick={handleClick} > {showName ? 'off' : 'on'}</button>
                 {showName && <p>{name}</p>}

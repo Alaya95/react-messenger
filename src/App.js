@@ -6,9 +6,10 @@ import { Profile } from './screens/Profile/Profile';
 import { Home } from './screens/Home/Home';
 import { Articles } from './screens/Articles/Articles';
 import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PublicRoute } from './components/PublicRoute/PublicRoute';
-
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './services/firebase';
 
 function App() {
   const [authed, setAuthed] = useState(false);
@@ -18,6 +19,18 @@ function App() {
   const handleLogout = () => {
     setAuthed(false);
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleLogin();
+      } else {
+        handleLogout();
+      }
+    });
+
+    return unsubscribe;
+  }, []);
 
   return (
     <div className="App">
@@ -36,6 +49,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PublicRoute authed={authed} />}>
             <Route path="" element={<Home onAuth={handleLogin} />} />
+            <Route path="signup" element={<Home onAuth={handleLogin} isSignUp />} />
           </Route>
 
           <Route path="/articles" element={<Articles />} />
