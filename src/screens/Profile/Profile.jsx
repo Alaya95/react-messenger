@@ -1,7 +1,6 @@
 // import { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Form from "../../components/Form/Form";
-import { usePrev } from "../../components/utils/usePrev";
 import { logOut } from "../../services/firebase";
 import { setName, toggleCheckbox } from "../../store/profile/actions";
 import { selectName, selectShowName } from "../../store/profile/selectors";
