@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState, } from "react";
 import { Navigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessageWithReply } from '../../store/messages/actions';
@@ -6,25 +6,47 @@ import { selectMessagesChatId } from '../../store/chats/selectors';
 
 import { Box } from '@mui/material';
 
-import { AUTHORS } from '../../components/utils/constants'
 
 import { MessageList } from '../../components/MessageList/MessageList';
 import Form from '../../components/Form/Form';
+import { onValue, push } from 'firebase/database';
+import { auth, getMsgsListRefById, getMsgsRefById } from '../../services/firebase';
 
 export function Chat() {
     const { id } = useParams();
 
+    const [messages, setMessages] = useState([]);
+
     const getMessages = useMemo(() => selectMessagesChatId(id), [id]);
-    const messages = useSelector(getMessages);
+    // const messages = useSelector(getMessages);
     const dispatch = useDispatch();
+
     const sendMessages = (text) => {
-        dispatch(addMessageWithReply(id, {
-            id: 'message-' + Date.now(),
-            author: AUTHORS.human,
-            text
-        }));
+        push(getMsgsListRefById(id), {
+            author: auth.currentUser.email,
+            text,
+            id: `msg-${Date.now()}`,
+        });
+        // dispatch(addMessageWithReply(id, {
+        //     id: 'message-' + Date.now(),
+        //     author: AUTHORS.human,
+        //     text
+        // })); 
     };
 
+    useEffect(() => {
+        const unsubscribe = onValue(getMsgsRefById(id), (snapshot) => {
+            const val = snapshot.val();
+            if (!snapshot.val()?.exists) {
+                setMessages(null);
+            } else {
+                console.log(val.messageList);
+                setMessages(Object.values(val.messageList || {}));
+            }
+        });
+
+        return unsubscribe;
+    }, [id]);
     if (!messages) {
         return <Navigate to='/chat' replace />
     }
