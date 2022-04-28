@@ -4,14 +4,41 @@ import { ChatsList } from './components/ChatsList/ChatsList';
 import { Chat } from './screens/Chat/Chat';
 import { Profile } from './screens/Profile/Profile';
 import { Home } from './screens/Home/Home';
+import { Articles } from './screens/Articles/Articles';
+import { PrivateRoute } from './components/PrivateRoute/PrivateRoute';
+import { useEffect, useState } from 'react';
+import { PublicRoute } from './components/PublicRoute/PublicRoute';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from './services/firebase';
 
 function App() {
+  const [authed, setAuthed] = useState(false);
+  const handleLogin = () => {
+    setAuthed(true);
+  };
+  const handleLogout = () => {
+    setAuthed(false);
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        handleLogin();
+      } else {
+        handleLogout();
+      }
+    });
+
+    return unsubscribe;
+  }, []);
+
   return (
     <div className="App">
       <BrowserRouter>
         <NavLink to="/" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
           Home page
         </NavLink>
+        <NavLink to="/articles">Articles</NavLink>
         <NavLink to="/chat" className={({ isActive }) => (isActive ? 'active' : 'inActive')}>
           Chat all
         </NavLink>
@@ -20,11 +47,23 @@ function App() {
         </NavLink>
 
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/chat" element={<ChatsList />}>
-            <Route path=":id" element={<Chat />} />
+          <Route path="/" element={<PublicRoute authed={authed} />}>
+            <Route path="" element={<Home onAuth={handleLogin} />} />
+            <Route path="signup" element={<Home onAuth={handleLogin} isSignUp />} />
           </Route>
-          <Route path="/profile" element={<Profile />}></Route>
+
+          <Route path="/articles" element={<Articles />} />
+
+          <Route path="/profile" element={<PrivateRoute authed={authed} />}>
+            <Route path="" element={<Profile onLogout={handleLogout} />} />
+          </Route>
+
+          <Route path="/chat" element={<PrivateRoute authed={authed} />}>
+            <Route path="" element={<ChatsList />}>
+              <Route path=":id" element={<Chat />} />
+            </Route>
+          </Route>
+
           <Route path="*" element={<h4>404</h4>}></Route>
         </Routes>
       </BrowserRouter>

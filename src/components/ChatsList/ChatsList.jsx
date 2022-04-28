@@ -4,28 +4,55 @@ import { Chat } from '../Chat/Chat';
 import { NavLink, Outlet } from 'react-router-dom';
 import './ChatList.styles.css';
 import Form from '../Form/Form';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectorChats } from '../../store/chats/selectors';
 import { addMessageChat, deleteMessage } from '../../store/messages/actions';
 import { addChat, deleteChat } from '../../store/chats/actions';
+import {
+    chatsRef,
+    getChatRefById,
+    getMsgsRefById,
+} from "../../services/firebase";
+import { useEffect, useState } from 'react';
+import { onValue, remove, set } from 'firebase/database';
 
 export const ChatsList = () => {
     const dispatch = useDispatch();
-    const chats = useSelector(selectorChats, shallowEqual);
+
+    const [chats, setChats] = useState([]);
+
+    // const chats = useSelector(selectorChats, shallowEqual);
+
     const handleSubmit = (newChatName) => {
         const newChat = {
             id: `chat-${Date.now()}`,
             name: newChatName,
             family: newChatName
         };
-        dispatch(addChat(newChat));
-        dispatch(addMessageChat(newChat.id));
+
+        set(getChatRefById(newChat.id), newChat);
+        set(getMsgsRefById(newChat.id), { exists: true });
+        // dispatch(addChat(newChat));
+        // dispatch(addMessageChat(newChat.id));
     };
 
-    const handleRemoveChat = (chatId) => {
-        dispatch(deleteChat(chatId));
-        dispatch(deleteMessage(chatId));
+
+    const handleRemoveChat = (id) => {
+        remove(getChatRefById(id));
+        set(getMsgsRefById(id), null);
+        
+        // dispatch(deleteChat(chatId));
+        // dispatch(deleteMessage(chatId));
     }
+
+
+    useEffect(() => {
+        const unsubscribe = onValue(chatsRef, (snapshot) => {
+            console.log(snapshot.val());
+            setChats(Object.values(snapshot.val() || {}));
+        });
+        return unsubscribe;
+    }, []);
 
     return (
         <Box
